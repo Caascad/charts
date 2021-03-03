@@ -234,15 +234,11 @@ spec:
               subPath: standalone-ha.xml
             {{- end }}
             {{- if .Values.auth.tls.enabled }}
-            {{- if not .Values.auth.tls.sharedJKS }}
             - name: shared-certs
               mountPath: /opt/bitnami/keycloak/certs
-              readOnly: true
-            {{- else }}
             - name: certificates
               mountPath: /certs
               readOnly: true
-            {{- end }}
             {{- end }}
             {{- if or .Values.initdbScriptsConfigMap .Values.initdbScripts }}
             - name: custom-init-scripts

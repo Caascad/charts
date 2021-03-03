@@ -119,6 +119,9 @@ auth:
   tls:
     enabled: false
 
+    keystoreFile: "/opt/bitnami/keycloak/certs/keycloak.keystore.jks"
+    truststoreFile: "/opt/bitnami/keycloak/certs/keycloak.truststore.jks"
+
     ## Boolean to indicate if replicas must have their own keystore file.
     ##
     ## If false, each replica needs a Kubernetes Secret with keys `keycloak.truststore.jks` and `keycloak-X.keystore.jks` where X is the ID of pod
@@ -130,7 +133,9 @@ auth:
     sharedJKS: false
 
     ## Name of the existing secret containing the truststore and keystore files.
-    ## If `sharedJKS`is false, you must provide one truststore for all the replicas plus one keystore per replica
+    ## Keycloak expects truststore and keystore located at `keystoreFile` and `truststoreFile`.
+    ## You can use a init script to perform additional action on those files (i.e: renaming). See `initdbScriptsConfigMap` or `initdbScripts`.
+    ## If `sharedJKS` is false, you must provide one truststore for all the replicas plus one keystore per replica
     ##    Create this secret following the steps below:
     ##    1) Generate your trustore and keystore files (more info at https://github.com/keycloak/keycloak-documentation/blob/master/openshift/topics/advanced_concepts.adoc#creating-https-and-jgroups-keystores-and-truststore-for-the-project_name-server)
     ##    2) Rename your truststore to `keycloak.truststore.jks`.
@@ -138,13 +143,14 @@ auth:
     ##    4) Run the command below where SECRET_NAME is the name of the secret you want to create:
     ##           kubectl create secret generic SECRET_NAME --from-file=./keycloak.truststore.jks --from-file=./keycloak-0.keystore.jks --from-file=./keycloak-1.keystore.jks ...
     ##
-    ## If `sharedJKS`is true, you must provide one trustore and one keystore for all the replicas
+    ## If `sharedJKS` is true, you must provide one trustore and one keystore for all the replicas
     ##    Create this secret following the steps below:
     ##    1) Generate your trustore and keystore files (more info at https://github.com/keycloak/keycloak-documentation/blob/master/openshift/topics/advanced_concepts.adoc#creating-https-and-jgroups-keystores-and-truststore-for-the-project_name-server)
-    ##    2) Rename your truststore to `truststore.jks`.
-    ##    3) Rename your keystore to `keystore.jks`
+    ##    2) Rename your truststore to `keycloak.truststore.jks`.
+    ##    3) Rename your keystore to `keycloak.keystore.jks`
     ##    4) Run the command below where SECRET_NAME is the name of the secret you want to create:
     ##           kubectl create secret generic SECRET_NAME --from-file=./truststore.jks --from-file=./keystore.jks
+    ##    5) The secret will be mounted in /certs.
     ##
     # jksSecret:
     ## Password to access the keystore when it's password-protected.
