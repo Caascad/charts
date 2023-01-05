@@ -538,6 +538,10 @@ updateStrategy:
   ## Can be set to RollingUpdate or OnDelete
   ##
   type: RollingUpdate
+## @param topologySpreadConstraints  Topology Spread Constraints.
+## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+##
+topologySpreadConstraints: []
 ## @param podAffinityPreset Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
 ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
 ##
